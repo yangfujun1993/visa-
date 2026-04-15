@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>AI电话系统</title>
+</head>
+<body>
+
+<h2>📞 AI拨号系统</h2>
+
+<input id="phone" placeholder="+1xxxxxxxxxx" />
+<button onclick="call()">拨打</button>
+
+<p id="status"></p>
+
+<script>
+async function call() {
+  const phone = document.getElementById('phone').value
+  const status = document.getElementById('status')
+
+  if (!phone.startsWith('+')) {
+    status.innerText = "❌ 号码必须带+"
+    return
+  }
+
+  status.innerText = "⏳ 正在拨号..."
+
+  const res = await fetch('/call', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ to: phone })
+  })
+
+  const data = await res.json()
+
+  status.innerText = data.success ? "✅ 已拨出" : "❌ " + data.error
+}
+</script>
+
+</body>
+</html>
